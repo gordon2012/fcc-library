@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const dbUrl =
     process.env.NODE_ENV !== 'production'
-        ? 'mongodb://localhost:27017/fcc-boilerplate-infosec-mongo'
+        ? 'mongodb://localhost:27017/fcc-library'
         : process.env.ATLAS_URI;
 
 const connect = async (model, schema) => {

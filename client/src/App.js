@@ -65,8 +65,59 @@ const App = () => {
 
                 <Card>
                     <h3>User Stories</h3>
-                    <List as="ol">
-                        <li>I will have user stories.</li>
+                    <List>
+                        <li>
+                            Nothing from my website will be cached in my client.
+                        </li>
+                        <li>
+                            The headers will say that the site is powered by
+                            'PHP 4.2.0' even though it isn't (as a security
+                            measure).
+                        </li>
+                        <li>
+                            I can post a title to <Code inline>/api/books</Code>{' '}
+                            to add a book and returned will be the object with
+                            the title and a unique _id.
+                        </li>
+                        <li>
+                            I can get <Code inline>/api/books</Code> to retrieve
+                            an array of all books containing title, _id, and
+                            commentcount.
+                        </li>
+                        <li>
+                            I can get <Code inline>{`/api/books/{id}`}</Code> to
+                            retrieve a single object of a book containing
+                            _title, _id, & an array of comments (empty array if
+                            no comments present).
+                        </li>
+                        <li>
+                            I can post a comment to{' '}
+                            <Code inline>{`/api/books/{id}`}</Code> to add a
+                            comment to a book and returned will be the books
+                            object similar to get{' '}
+                            <Code inline>{`/api/books/{id}`}</Code> including
+                            the new comment.
+                        </li>
+                        <li>
+                            I can delete{' '}
+                            <Code inline>{`/api/books/{_id}`}</Code> to delete a
+                            book from the collection. Returned will be 'delete
+                            successful' if successful.
+                        </li>
+                        <li>
+                            If I try to request a book that doesn't exist I will
+                            be returned 'no book exists'.
+                        </li>
+                        <li>
+                            I can send a delete request to{' '}
+                            <Code inline>/api/books</Code> to delete all books
+                            in the database. Returned will be 'complete delete
+                            successful' if successful.
+                        </li>
+                        <li>
+                            All 6 functional tests required are complete and
+                            passing.
+                        </li>
                     </List>
                 </Card>
 
