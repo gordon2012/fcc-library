@@ -3,7 +3,7 @@ const cors = require('cors');
 const nocache = require('nocache');
 
 const connect = require('./connect');
-const exampleSchema = require('./models/example');
+const bookSchema = require('./models/book');
 
 const app = express();
 const origin =
@@ -19,14 +19,86 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get('/api/example', async (req, res) => {
+app.post('/api/books', async (req, res) => {
     try {
-        // const Example = await connect('example', exampleSchema);
-        // const example = await Example.create({ name: 'Hello World' });
-        // res.status(200).json(example.toJSON());
-        res.status(200).json({ msg: 'Hello World' });
+        const Book = await connect('book', bookSchema);
+        const created = await Book.create({ title: req.body.title });
+        const book = await Book.findOne({ _id: created._id }, 'title');
+        res.status(200).json(book);
     } catch (error) {
         res.status(400).json({ error: error.message });
+    }
+});
+
+app.get('/api/books', async (req, res) => {
+    try {
+        const Book = await connect('book', bookSchema);
+        const books = await Book.find({}, 'title comments');
+
+        const countBooks = books.map(book => ({
+            _id: book._id,
+            title: book.title,
+            commentcount: book.comments.length,
+        }));
+
+        res.status(200).json(countBooks);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
+app.get('/api/books/:id', async (req, res) => {
+    try {
+        const Book = await connect('book', bookSchema);
+        const book = await Book.findOne(
+            { _id: req.params.id },
+            'title comments'
+        );
+        res.status(200).json(book);
+    } catch (error) {
+        res.status(200).json(null);
+    }
+});
+
+app.post('/api/books/:id', async (req, res) => {
+    try {
+        const Book = await connect('book', bookSchema);
+        const book = await Book.findOneAndUpdate(
+            { _id: req.params.id },
+            { $push: { comments: req.body.comment } },
+            { fields: 'title comments', new: true }
+        );
+        res.status(200).json(book);
+    } catch (error) {
+        res.status(200).json('no book exists');
+    }
+});
+
+app.delete('/api/books/:id', async (req, res) => {
+    try {
+        const Book = await connect('book', bookSchema);
+        const removed = await Book.findOneAndRemove({ _id: req.params.id });
+        if (!removed) {
+            return res.status(200).json('no book exists');
+        }
+        res.status(200).json('delete successful');
+    } catch (error) {
+        res.status(200).json('no book exists');
+    }
+});
+
+app.delete('/api/books', async (req, res) => {
+    try {
+        const Book = await connect('book', bookSchema);
+        const removed = await Book.deleteMany({});
+
+        if (!removed) {
+            return res.status(200).json('could not delete all books');
+        }
+
+        res.status(200).json('complete delete successful');
+    } catch (error) {
+        res.status(200).json('could not delete all books');
     }
 });
 

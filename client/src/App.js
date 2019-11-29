@@ -48,20 +48,18 @@ const App = () => {
             return newState;
         });
 
-    const getExample = async () => {
-        const response = await fetch(`${BASE_URL}/api/example`);
+    const getBooks = async () => {
+        const response = await fetch(`${BASE_URL}/api/books`);
         const data = await response.json();
         setResponses(prevState => [data, ...prevState]);
-        setResults(prevState => ({ ...prevState, getExample: data }));
+        setResults(prevState => ({ ...prevState, getBooks: data }));
     };
 
     return (
         <>
             <GlobalStyle />
             <Layout>
-                <Title>
-                    Information Security and Quality Assurance Boilerplate
-                </Title>
+                <Title>Personal Library</Title>
 
                 <Card>
                     <h3>User Stories</h3>
@@ -138,18 +136,17 @@ const App = () => {
                 <Title as="h2">Front-End</Title>
 
                 <Card>
-                    <h3>Input</h3>
+                    <h3>
+                        <Code>{`GET /api/books`}</Code>
+                    </h3>
 
-                    <Form debug onSubmit={getExample}>
-                        <Input required name="name" title="Name" />
-                        <Button type="submit">Submit</Button>
-                    </Form>
+                    <Button onClick={getBooks}>GET Books</Button>
 
-                    {results.getExample && (
+                    {results.getBooks && (
                         <>
                             <h3>Result</h3>
-                            <Code box>{results.getExample}</Code>
-                            <Button onClick={() => clearResult('getExample')}>
+                            <Code box>{results.getBooks}</Code>
+                            <Button onClick={() => clearResult('getBooks')}>
                                 Clear
                             </Button>
                         </>
