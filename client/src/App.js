@@ -3,10 +3,12 @@ import styled, { createGlobalStyle } from 'styled-components';
 import { BASE_URL } from './index';
 
 import Layout from './components/Layout';
+import Card from './components/Card';
+import Book from './components/Book';
 import Code from './components/Code';
+import Form from './components/Form';
 import Input from './components/Input';
 import Button from './components/Button';
-import Form from './components/Form';
 
 const GlobalStyle = createGlobalStyle`
     @import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono|Ubuntu:400,700&display=swap');
@@ -26,15 +28,16 @@ const Title = styled.h1`
     text-align: center;
 `;
 
-const Card = styled.section`
-    background: #300a24;
-    color: white;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    h3 {
-        margin-top: 0;
-    }
-`;
+// const Card = styled.section`
+//     /* background: #300a24; */
+//     background: ${props => (props.variant === 'light' ? 'white' : '#300a24')};
+//     color: ${props => (props.variant === 'light' ? '#300a24' : 'white')};
+//     padding: 1rem;
+//     margin-bottom: 1rem;
+//     h3 {
+//         margin-top: 0;
+//     }
+// `;
 
 const List = styled.ul``;
 
@@ -54,6 +57,18 @@ const App = () => {
         setResponses(prevState => [data, ...prevState]);
         setResults(prevState => ({ ...prevState, getBooks: data }));
     };
+
+    // new stuff
+
+    const [books, setBooks] = React.useState(null);
+
+    React.useEffect(() => {
+        (async () => {
+            const res = await fetch(`${BASE_URL}/api/books`);
+            const data = await res.json();
+            setBooks(data);
+        })();
+    }, []);
 
     return (
         <>
@@ -150,6 +165,64 @@ const App = () => {
                                 Clear
                             </Button>
                         </>
+                    )}
+                </Card>
+
+                <Card>
+                    <h3>Add New Book</h3>
+                    <Form>
+                        <Input required name="title" title="Title" />
+                    </Form>
+                </Card>
+
+                <Card>
+                    <h3>Existing Books</h3>
+
+                    {/* <Card variant="light">
+                        <h3>A Book</h3>
+                        <p>Comments: 0</p>
+
+                        <List>
+                            <li>a comment</li>
+                            <li>another comment</li>
+                        </List>
+
+                        <Form>
+                            <Input
+                                required
+                                name="comment"
+                                title="Add comment"
+                            />
+                        </Form>
+                    </Card>
+
+                    <Card variant="light">A Book</Card>
+
+                    <Book
+                        book={{
+                            _id: '5de0afe811a9c749502997b7',
+                            title: 'The Necromonicon',
+                            commentcount: 2,
+                        }}
+                    />
+                    <Book
+                        book={{
+                            _id: '5de0b01011a9c749502997b8',
+                            title: 'Harry Potter',
+                            commentcount: 0,
+                        }}
+                    /> */}
+
+                    {books ? (
+                        books.length > 0 ? (
+                            books.map(book => (
+                                <Book key={book._id} book={book} />
+                            ))
+                        ) : (
+                            <p>No Books</p>
+                        )
+                    ) : (
+                        <p>Loading...</p>
                     )}
                 </Card>
 
