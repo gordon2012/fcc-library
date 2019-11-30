@@ -1,6 +1,9 @@
 {
     "name": "fcc-library",
     "version": 2,
+    "env": {
+        "ATLAS_URI": "@library-atlas-uri"
+    },
     "builds": [
         { "src": "server/index.js", "use": "@now/node-server" },
         {
@@ -11,9 +14,34 @@
     ],
     "routes": [
         {
-            "src": "/api/example",
+            "src": "/api/books",
             "dest": "/server/index.js",
             "methods": ["GET"]
+        },
+        {
+            "src": "/api/books/(.*)",
+            "dest": "/server/index.js",
+            "methods": ["GET"]
+        },
+        {
+            "src": "/api/books",
+            "dest": "/server/index.js",
+            "methods": ["POST"]
+        },
+        {
+            "src": "/api/books/(.*)",
+            "dest": "/server/index.js",
+            "methods": ["POST"]
+        },
+        {
+            "src": "/api/books",
+            "dest": "/server/index.js",
+            "methods": ["DELETE"]
+        },
+        {
+            "src": "/api/books/(.*)",
+            "dest": "/server/index.js",
+            "methods": ["DELETE"]
         },
         {
             "src": "/",
