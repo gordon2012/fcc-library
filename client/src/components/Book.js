@@ -7,33 +7,32 @@ import Form from './Form';
 import Input from './Input';
 import Button from './Button';
 
-import Code from './Code';
-
 const StyledCard = styled(Card)`
-    /* border: 3px solid red; */
-
     a {
         border-radius: 3px;
         padding: 0.5rem 0.5rem;
-
-        /* border: 2px solid #e65100; */
-        /* border: none; */
         border: 1px solid black;
-
-        /* background: #e65100; */
-
         float: right;
         &:hover {
             cursor: pointer;
         }
     }
 
-    p {
-        /* float: right; */
+    ul {
+        margin-top: 0;
     }
 `;
 
-const Book = ({ book }) => {
+const StyledButton = styled(Button)`
+    width: initial;
+    padding: 0;
+    float: right;
+    font-size: 1.5em;
+    background: transparent;
+    border: none;
+`;
+
+const Book = ({ book, onDelete }) => {
     const [state, setState] = React.useReducer(
         (state, newState) => ({ ...state, ...newState }),
         {
@@ -58,17 +57,10 @@ const Book = ({ book }) => {
                         `${BASE_URL}/api/books/${book._id}`
                     );
                     const data = await response.json();
-                    // setState({ comments: data.comments });
 
                     setState({
                         comments: data.comments,
-                        commentcount: state.commentcount + 1, // ?
                     });
-
-                    // setState(prevState => ({
-                    //     comments: data.comments,
-                    //     commentcount: prevState.commentcount + 1,
-                    // }));
                 }
             }
         }
@@ -84,23 +76,30 @@ const Book = ({ book }) => {
             body: JSON.stringify(input),
         });
         const data = await res.json();
-        setState({ comments: data.comments });
+        setState({
+            comments: data.comments,
+            commentcount: state.commentcount + 1,
+        });
     };
+
+    const handleDeleteBook = () => onDelete(book._id);
 
     return (
         <StyledCard variant="light">
             <h3>
                 {book.title}
-                <a onClick={handleOpen}>{state.open ? '➖' : '➕'}</a>
+                <StyledButton onClick={handleOpen}>
+                    {state.open ? '🔺' : '🔻'}
+                </StyledButton>
             </h3>
             <p>
                 {state.commentcount > 0
-                    ? `Comments: ${book.commentcount}`
+                    ? `Comments: ${state.commentcount}`
                     : 'No Comments'}
             </p>
 
             {state.open && (
-                <>
+                <Card>
                     {state.comments
                         ? state.comments.length > 0 && (
                               <ul>
@@ -114,8 +113,9 @@ const Book = ({ book }) => {
                         <Input required name="comment" title="Add comment" />
                         <Button type="submit">Add Comment</Button>
                     </Form>
-                </>
+                </Card>
             )}
+            <Button onClick={handleDeleteBook}>Delete Book</Button>
         </StyledCard>
     );
 };

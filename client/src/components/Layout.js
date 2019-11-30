@@ -22,7 +22,7 @@ const Container = styled.div`
 `;
 
 const StyledFooter = styled.footer`
-    padding: 1rem;
+    padding: 1rem 0;
     text-align: center;
 `;
 const Footer = () => (
